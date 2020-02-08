@@ -17,7 +17,7 @@ from sys import exit
 import shutil
 
 class Archivo:
-    
+    #abre el archivo y valida si es valido o no abre
     def __init__(self,nombre):
         try:
             self.f=open(nombre,"r")
@@ -25,7 +25,7 @@ class Archivo:
         except:
                 print("no se puede abrir el archivo",nombre)
                 exit()
-                
+    #imprime el contenido del archivo
     def muestra(self):
         i=1
         for linea in self.f:
@@ -33,7 +33,7 @@ class Archivo:
             i+=1
         self.f.seek(0)
     
-    
+    #cuenta vocales sin distincion de asentos y sean mayusculas o minusculas
     def cuentaVocales(self):
         def vocales(s):
             contador=0
@@ -48,6 +48,7 @@ class Archivo:
         self.f.seek(0)
         return contador
     
+    #cuenta consonantes no importando mayusculas o minusculas
     def cuentaConsonantes(self):
         def consonantes(s):
             contador=0
@@ -62,7 +63,7 @@ class Archivo:
         self.f.seek(0)
         return contador
     
-    
+    #cuenta los signos de puntuacion
     def cuentaSignos(self):
         def signos(s):
             contador=0
@@ -77,6 +78,7 @@ class Archivo:
         self.f.seek(0)
         return contador
     
+    #cuenta el numero de espacios entre palabras
     def cuentaEspacios(self):
         def espacios(s):
             contador=0
@@ -91,6 +93,7 @@ class Archivo:
         self.f.seek(0)
         return contador
     
+    #valida el numero de palabras en total
     def cuentaPalabras(self):
         def palabras(s):
             contador=0
@@ -103,7 +106,7 @@ class Archivo:
         self.f.seek(0)
         return contador
     
-    
+    #cuenta el numero de saltos de linea
     def cuentaLineas(self):
         i=0
         for linea in self.f:
@@ -111,7 +114,7 @@ class Archivo:
         self.f.seek(0)
         return i
 
-
+    #cuenta el numero de mayusculas
     def cuentaMayus(self):
         def mayus(s):
             contador=0
@@ -125,7 +128,7 @@ class Archivo:
         return contador
 
 
-
+    #cuenta el numero de minusculas
     def cuentaMinus(self):
         def minus(s):
             contador=0
@@ -137,22 +140,23 @@ class Archivo:
             contador+=minus(linea)
         self.f.seek(0)
         return contador
-
+    #copia el archivo a otra locacion o carpeta
     def copia():
         shutil.copy("archivo.txt", "Documentos/archivo.txt")
 
-
+    #imprime el contenido en mayusculas
     def converMayus(self):
         for linea in self.f:
             print(linea.upper(),end="")
         self.f.seek(0)
 
-
+    #imprime el contenido en minusculas
     def converMinus(self):
         for linea in self.f:
             print(linea.lower(),end="")
         self.f.seek(0)
         
+    #imprime en hexadecimal
     def converHexa(self):    
         for linea in self.f:
             print(':'.join(hex(ord(x))[2:] for x in linea))
