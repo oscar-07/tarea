@@ -1,0 +1,181 @@
+#Realizar un programa que contenga la clase Archivo, con los metodos
+#    Cuenta vocales
+#    Cuenta consonantes
+#    Cuenta signos de puntuación
+#    Cuenta espacios
+#    Cuenta palabras
+#    Cuenta líneas
+#    Mayúsculas
+#    Minúsculas
+#    Copia archivo
+#    Convierte a mayusculas
+#    Convierte a minusculas
+#    Muestra en hexadecimal
+
+
+from sys import exit
+import shutil
+
+class Archivo:
+    
+    def __init__(self,nombre):
+        try:
+            self.f=open(nombre,"r")
+            self.nombre=nombre
+        except:
+                print("no se puede abrir el archivo",nombre)
+                exit()
+                
+    def muestra(self):
+        i=1
+        for linea in self.f:
+            print("{:3}:{}".format(i,linea),end="")
+            i+=1
+        self.f.seek(0)
+    
+    
+    def cuentaVocales(self):
+        def vocales(s):
+            contador=0
+            for i in range(len(s)):
+                if s[i] in set("aeiouáéíóúAEIOUÁÉÍÓÚ"):
+                    contador +=1
+            return contador
+
+        contador=0
+        for linea in self.f:
+            contador+=vocales(linea)
+        self.f.seek(0)
+        return contador
+    
+    def cuentaConsonantes(self):
+        def consonantes(s):
+            contador=0
+            for i in range(len(s)):
+                if s[i] in set("BCDFGHJKLMNÑPQRSTVWXYZbcdfghjklmnñpqrstvwxyz"):
+                    contador +=1
+            return contador
+
+        contador=0
+        for linea in self.f:
+            contador+=consonantes(linea)
+        self.f.seek(0)
+        return contador
+    
+    
+    def cuentaSignos(self):
+        def signos(s):
+            contador=0
+            for i in range(len(s)):
+                if s[i] in set(",:.:!¡¿?)(*/-_]["):
+                    contador +=1
+            return contador
+
+        contador=0
+        for linea in self.f:
+            contador+=signos(linea)
+        self.f.seek(0)
+        return contador
+    
+    def cuentaEspacios(self):
+        def espacios(s):
+            contador=0
+            for i in range(len(s)):
+                if s[i] in set(" "):
+                    contador +=1
+            return contador
+
+        contador=0
+        for linea in self.f:
+            contador+=espacios(linea)
+        self.f.seek(0)
+        return contador
+    
+    def cuentaPalabras(self):
+        def palabras(s):
+            contador=0
+            contador=int (str(len(s.split(" "))))
+            return contador
+
+        contador=0
+        for linea in self.f:
+            contador+=palabras(linea)
+        self.f.seek(0)
+        return contador
+    
+    
+    def cuentaLineas(self):
+        i=0
+        for linea in self.f:
+            i+=1
+        self.f.seek(0)
+        return i
+
+
+    def cuentaMayus(self):
+        def mayus(s):
+            contador=0
+            contador = len([c for c in s if c.isupper()])
+            return contador
+
+        contador=0
+        for linea in self.f:
+            contador+=mayus(linea)
+        self.f.seek(0)
+        return contador
+
+
+
+    def cuentaMinus(self):
+        def minus(s):
+            contador=0
+            contador=len([c for c in s if c.islower()])
+            return contador
+
+        contador=0
+        for linea in self.f:
+            contador+=minus(linea)
+        self.f.seek(0)
+        return contador
+
+    def copia():
+        shutil.copy("archivo.txt", "Documentos/archivo.txt")
+
+
+    def converMayus(self):
+        for linea in self.f:
+            print(linea.upper(),end="")
+        self.f.seek(0)
+
+
+    def converMinus(self):
+        for linea in self.f:
+            print(linea.lower(),end="")
+        self.f.seek(0)
+        
+    def converHexa(self):    
+        for linea in self.f:
+            print(':'.join(hex(ord(x))[2:] for x in linea))
+        self.f.seek(0)
+
+#archivo.txt
+
+def main():  
+    nomb=input("prop el nombre: ")
+    archivo=Archivo(nomb)
+    archivo.muestra()
+    print('\n'+"en total son: ")
+    print(archivo.cuentaVocales()," vocales")  
+    print(archivo.cuentaConsonantes()," consonantes")
+    print(archivo.cuentaSignos(), " Signos de puntuacion")
+    print(archivo.cuentaEspacios(), " espacios")
+    print(archivo.cuentaPalabras(), " palabras")
+    print(archivo.cuentaLineas(), "  lineas")
+    print(archivo.cuentaMayus(), "  mayusculas")
+    print(archivo.cuentaMinus(), "  minusculas")
+#    print(archivo.copia(), "  copia")
+    print(archivo.converMayus(), "  mayusculas")
+    print(archivo.converMinus(), "  minusculas")
+    print(archivo.converHexa(), "  Hexadecimal")
+    
+main()   
