@@ -1,0 +1,120 @@
+public class Filosofo extends Thread{
+	private int id;
+	private Tenedor iz,der;
+	private enum estado {FILOSOFANDO, COMIENDO, HAMBRIENTO};
+	private estado state;
+	private boolean lleno;
+	private int contador;
+	
+	private boolean salida = true;
+	private int suma = 0;
+	public Filosofo(int id, Tenedor iz, Tenedor der) {
+		this.id = id;
+		this.iz = iz;
+		this.der = der;
+		state = estado.FILOSOFANDO;
+		contador = 0;
+		lleno = true;
+	}
+        public void hambre() {
+                System.out.println("El filosofo: ("+(id+1)+") esta: "+state);
+	}
+        
+	public void pensar() {
+                System.out.println("El filosofo: ("+(id+1)+") esta: "+state);
+	}
+	public void comer() {
+		System.out.println("El filosofo: ("+(id+1)+") esta: "+state);
+	}
+	public void disponible() {
+		if(iz.libre == true && der.libre == true && this.state == estado.HAMBRIENTO) {
+			state = estado.COMIENDO;
+			contador++;
+                        System.out.println("El filosofo: ("+(id+1)+") comio ("+contador+")");
+			if(contador >= 5) {
+				lleno = false;
+				System.out.println("El filosofo: "+id+" ya se lleno");
+			}
+		}
+	}
+	public void run() {
+		while(salida) {
+			try {
+				switch(state) {
+				case FILOSOFANDO:
+					iz.libre = true;
+					der.libre = true;
+					pensar();
+					state = estado.HAMBRIENTO;
+                                        hambre();
+					break;
+				case HAMBRIENTO:
+					disponible();
+					state = estado.COMIENDO;
+					break;
+				case COMIENDO:
+					iz.aTenedor(id);
+					der.aTenedor(id);
+					iz.libre = false;
+					der.libre = false;
+					comer();
+					der.sTenedor(id);
+					iz.sTenedor(id);
+					Thread.sleep(200);
+					state = estado.FILOSOFANDO;
+					break;
+				}
+				for(int i = 0; i < 5; i++) {
+					if(lleno == false) {
+						suma++;
+						if(suma == 5) {
+							salida = false;
+						}
+					}	
+				}
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
+}
+
+
+public class Tenedor {
+	private final int id;
+	public boolean libre = true;
+	public Tenedor(int id) {
+		this.id = id;
+	}
+	public synchronized void aTenedor(int i) throws InterruptedException {
+		while(!libre)
+			wait();
+                System.out.println("El filosofo: ("+(id+1)+") Tomo 2 tenedores");
+		libre = false;
+	}
+	public synchronized void sTenedor(int i) {
+		libre = true;
+                System.out.println("El filosofo: ("+(id+1)+") Solto los tenedores");
+		notify();
+	}
+}
+
+public class Principal {
+
+	public static void main(String[] args) {
+		Tenedor[] tenedores = new Tenedor[5];
+		for(int i = 0; i < tenedores.length; i++) {
+			tenedores[i] = new Tenedor(i);
+		}
+		Filosofo[] filosofos = new Filosofo[5];
+		for(int i = 0; i < filosofos.length; i++) {
+			filosofos[i] = new Filosofo(i, tenedores[i], tenedores[(i+1)%5]);
+		}
+		
+		System.out.println("A comer");
+		for(int i = 0; i < filosofos.length; i++) {
+			filosofos[i].start();			
+		}
+	}
+}
